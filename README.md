@@ -29,7 +29,7 @@ Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A  
     uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
     sub   rsa4096 2017-02-22 [S]
 
-We make Docker’s Linux package repository known to our computer. The command lsb_release -cs returns the codename of the Linux distribution, which yields xenial for Ubuntu 18.04.
+We make Docker’s Linux package repository known to our computer. The command lsb_release -cs returns the codename of the Linux distribution, which yields bionic for Ubuntu 18.04.
 
     $ sudo add-apt-repository \
       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
