@@ -4,16 +4,21 @@
 
 ### Set up the repository
 
-Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+We first make sure that no old Docker installations are hanging around in our Ubuntu system.
+
+    $ sudo apt-get remove docker docker-engine docker.io \
+      containerd runc
+  
+Docker requires a few additional Linux packages to function properly.
 
     $ sudo apt-get update
 
-    $ sudo apt-get install apt-transport-https ca-certificates \
-        curl gnupg-agent software-properties-common linux-generic
+    $ sudo apt-get install apt-transport-https ca-certificates curl \
+      gnupg-agent software-properties-common
 
 Add Docker’s official GPG key:
 
-    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add 
 
 Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88, by searching for the last 8 characters of the fingerprint.
 
@@ -24,16 +29,20 @@ Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A  
     uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
     sub   rsa4096 2017-02-22 [S]
 
-Use the following command to set up the stable repository:
+We make Docker’s Linux package repository known to our computer. The command lsb_release -cs returns the codename of the Linux distribution, which yields xenial for Ubuntu 18.04.
 
-    $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable"
+    $ sudo add-apt-repository \
+      "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable"
 
 Install Docker Engine:
 
     $ sudo apt-get update
-    $ sudo apt-get install docker-ce docker-ce-cli containerd.io
+    $ sudo apt-get -y install docker-ce
 
+The last command installs the server and client of Docker CE, starts the server and creates a group docker. If we add our user name to the docker group, we don’t have to run each Docker command as root.
+
+    $ sudo usermod -a -G docker "$(whoami)"
 
 ## First build
 
