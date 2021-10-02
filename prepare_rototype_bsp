@@ -7,14 +7,18 @@ from collections import defaultdict
 
 distro_dic = {}
 docker_dic = {}
+meta_dic   = {}
 
 def fill_dictionary():
 	global distro_dic
 	global docker_dic
+	global meta_dic
 
 	distro_dic = defaultdict(dict)
 	distro_dic['nxp']['gatesgarth']="https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-hardknott -m imx-5.10.35-2.0.0.xml"
+
 	docker_dic['gatesgarth']="ubuntu18"
+
 	meta_dic['gatesgarth']="git://github.com/rfacch74/meta-rototype-ecp.git;protocol=https"
 
 def print_usage():
@@ -27,9 +31,9 @@ def print_available():
 	global distro_dic
 	print("Combination available:")
 	for vendor in distro_dic.keys():
-		print("\nVendor %s:\n"%vendor)
+		print("\nVendor %s: "%vendor)
 		for yocto in distro_dic[vendor].keys():
-  			print(yocto)
+  			print("    %s"%yocto)
 
 def clone_sources(mvendor,yversion):
 	global distro_dic
@@ -69,10 +73,10 @@ def clone_sources(mvendor,yversion):
 		os.chdir(path)
 		os.system("repo init -u " + repofiles)
 		os.system("repo sync")
-		src_path = os.getcwd() + "/source"
+		src_path = os.getcwd() + "/sources"
 		os.chdir(src_path)
 		os.system("git clone " + metaname)
-		os.chdir(path)
+		os.chdir("..")
 
 	os.chdir("..")
 	cur_path = os.getcwd() + "/" + path
