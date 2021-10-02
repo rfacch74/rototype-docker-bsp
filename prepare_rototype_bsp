@@ -1,0 +1,109 @@
+#!/usr/bin/python
+
+import sys,os
+import shutil
+
+from collections import defaultdict
+
+distro_dic = {}
+docker_dic = {}
+
+def fill_dictionary():
+	global distro_dic
+	global docker_dic
+
+	distro_dic = defaultdict(dict)
+	distro_dic['nxp']['gatesgarth']="https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-hardknott -m imx-5.10.35-2.0.0.xml"
+	docker_dic['gatesgarth']="ubuntu18"
+	meta_dic['gatesgarth']="git://github.com/rfacch74/meta-rototype-ecp.git;protocol=https"
+
+def print_usage():
+	print ("Usage:\n%s <SOC vendor> <yocto version>\n" % (sys.argv[0]))
+	print ("es.\n\n %s nxp gatesgarth "% (sys.argv[0]))
+	print_available()
+	quit()
+
+def print_available():
+	global distro_dic
+	print("Combination available:")
+	for vendor in distro_dic.keys():
+		print("\nVendor %s:\n"%vendor)
+		for yocto in distro_dic[vendor].keys():
+  			print(yocto)
+
+def clone_sources(mvendor,yversion):
+	global distro_dic
+	global docker_dic
+	global meta_dic
+
+	try:
+		repofiles=distro_dic[mvendor][yversion]
+	except:
+		print_available()
+		exit()
+
+	try:
+		ubuntuname=docker_dic[yversion]
+	except:
+		print("error on docker_dic")
+		exit()
+
+	try:
+		metaname=meta_dic[yversion]
+	except:
+		print("error on meta_dic")
+		exit()
+
+
+	path=mvendor + "_" + yversion
+
+	containername="ubuntu_" + ubuntuname
+
+	try:
+		os.mkdir(path)
+	except OSError:
+		print ("the directory %s already exist" % path)
+		os.chdir(path)
+	else:
+		print ("Successfully created the directory %s " % path)
+		os.chdir(path)
+		os.system("repo init -u " + repofiles)
+		os.system("repo sync")
+		src_path = os.getcwd() + "/source"
+		os.chdir(src_path)
+		os.system("git clone " + metaname)
+		os.chdir(path)
+
+	os.chdir("..")
+	cur_path = os.getcwd() + "/" + path
+	docker_path = "dockerfiles/"+path
+	try:
+		os.mkdir(docker_path)
+	except OSError:
+		print ("the directory %s already exist" % docker_path)
+		print(path)
+		os.chdir(docker_path)
+	else:
+		print ("Successfully created the directory %s " % docker_path)
+		os.chdir(docker_path)
+		shutil.copy("../Dockerfile_" + ubuntuname, "Dockerfile")
+
+		os.system("sudo docker build --build-arg UID=$(id -u) -t " + containername +" .")
+
+	os.system("sudo docker run -v %s:/yocto -v/lib/modules/:/lib/modules -v/usr/src/:/usr/src  -ti " % (cur_path) + containername)
+
+def main():
+
+	fill_dictionary()
+
+	if len(sys.argv) != 3:
+		print_usage()
+		quit()
+
+	vendor=sys.argv[1]
+	yoctoversion=sys.argv[2]
+
+	clone_sources(vendor,yoctoversion)
+
+if __name__ == "__main__":
+    main()
