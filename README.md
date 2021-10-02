@@ -63,7 +63,7 @@ where ``<machine-name>`` corresponds to the module for which the operative syste
 
 	 DISTRO=ecp-imx-wayland MACHINE=imx8mq-ecp source imx-setup-release.sh -b build-rototype-ecp
 
-where a directory named ``build`` is created and enviroment variables are set to compile images for the module ``Rototype ECP MX8MQ``. Please notice that the available ``<machine-name>`` correspond to the names of the relative configuration files in ``/sources/meta-rototype-ecp/conf/machine``.
+where a directory named ``build`` is created and enviroment variables are set to compile images for the module ``Rototype MX8MQ``. Please notice that the available ``<machine-name>`` correspond to the names of the relative configuration files in ``/sources/meta-rototype-ecp/conf/machine``.
 
 If the build directory already exists due to previous compilations it will be required to set the enviroment variables only executing the command:
 
