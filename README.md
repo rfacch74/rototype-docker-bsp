@@ -53,16 +53,12 @@ Clone the repository:
 Launch the script to prepare the environment:
 
     $ cd ~/rototype-docker-bsp
-    $ ./prepare_rototype_bsp --help
-
-Ex:
-
     $ ./prepare_rototype_bsp nxp gatesgarth
 
 at the end of procedure under /yocto folder you can found all source code.
 
 
-## Set enviroment variables
+## Set enviroment variales
 
 Enter Yocto folder and launch the script setting enviroment variables:
 
@@ -70,26 +66,26 @@ Enter Yocto folder and launch the script setting enviroment variables:
 
 where ``<machine-name>`` corresponds to the module for which the operative system image will be compiled and ``<build-dir-name>`` is the bulding directory name chosen by the user, as in the following example:
 
-	 DISTRO=ecp-imx-wayland MACHINE=imx8mq-ecp source imx-setup-release.sh -b build-rototype-ecp
+    $ DISTRO=ecp-imx-wayland MACHINE=imx8mq-ecp source imx-setup-release.sh -b build-rototype-ecp
 
 where a directory named ``build`` is created and enviroment variables are set to compile images for the module ``Rototype ECP MX8MQ``. Please notice that the available ``<machine-name>`` correspond to the names of the relative configuration files in ``/sources/meta-rototype-ecp/conf/machine``.
 
 If the build directory already exists due to previous compilations it will be required to set the enviroment variables only executing the command:
 
-	source setup-environment build
+    $ source setup-environment build
 
 ## Configure yocto layers
 
 Add with bitbake the meta-rototype-ecp layer to the image layers:
 
-	bitbake-layers add-layer ../sources/meta-rototype-ecp
+    $ bitbake-layers add-layer ../sources/meta-rototype-ecp
 
 ## Compile and flash image on sdcard
 
 Compile the desired image with bitbake using the command (in this example we compile the recipe ``rototype-evaluation-image.bb`` for ``ROTOTYPE ECP MX8MQ ``):
 
-	bitbake rototype-evaluation-image
+    $ bitbake rototype-evaluation-image
 
 Once the image is compiled it will be possible to find in the build directory a deploy folder with the image files. The relative path to this folder from the yocto directory will be:
 
-	tmp/deploy/images/imx8mq-ecp
+    $ tmp/deploy/images/imx8mq-ecp
